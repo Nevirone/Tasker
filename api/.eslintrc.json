@@ -13,7 +13,8 @@
     "comma-dangle": ["error", "always-multiline"],
     "padding-line-between-statements": [
       "error",
-      { "blankLine": "always", "prev": "cjs-import", "next": "*" }
+      { "blankLine": "always", "prev": "cjs-import", "next": "*" },
+      { "blankLine": "any", "prev": "cjs-import", "next": "cjs-import" }
     ]
   }
 }
