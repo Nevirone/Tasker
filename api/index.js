@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const connect = require('./src/services/database');
-const { authRouter } = require('./src/routes/index');
+const { authRouter, userRouter } = require('./src/routes/index');
 
 const app = express();
 
@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 app.get('/', (req, res) => {
   res.status(200).send({ message: 'Hello world!' });

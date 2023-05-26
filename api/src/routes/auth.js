@@ -33,9 +33,12 @@ router.post('/login', async (req, res) => {
   if (!validPassword)
     return res.status(401).send({ message: 'Invalid Email or Password' });
 
+  const token = user.generateJWT();
   // Login success
-  // TODO - sign and send JWT token
-  return res.status(200).send({ message: 'Logged in successfully' });
+
+  return res
+    .status(200)
+    .send({ token: token, message: 'Logged in successfully' });
 });
 
 router.post('/register', async (req, res) => {
