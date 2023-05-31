@@ -24,6 +24,7 @@ userSchema.methods.generateJWT = function () {
 
 const User = mongoose.model('User', userSchema);
 
+// Validation
 const validateUser = (data) => {
   const schema = joi.object({
     firstName: joi.string().required().label('First Name'),
