@@ -10,8 +10,16 @@ const authAdmin = async (req, res, next) => {
 
   if (!user) return res.status(500).send();
 
-  if (!user.admin) return res.status(401).send();
+  if (!user.admin) {
+    console.log(
+      `Unauthorized admin role access for user: ${req.user._id} - ${req.user.email}`,
+    );
+    return res.status(401).send();
+  }
 
+  console.log(
+    `Admin role authorized for user: ${req.user._id} - ${req.user.email}`,
+  );
   next();
 };
 

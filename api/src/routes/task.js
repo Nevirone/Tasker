@@ -5,10 +5,20 @@ const { authAdmin } = require('../middlewares/index');
 
 const router = express.Router();
 
-router.get('/', authAdmin, async (req, res) => {
+router.get('/my', async (req, res) => {
   try {
     const tasks = await Task.find({});
     tasks.filter((task) => task.created_by === req.user._id);
+    res.status(200).send({ tasks: tasks });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+});
+
+router.get('/', authAdmin, async (req, res) => {
+  try {
+    const tasks = await Task.find({});
     res.status(200).send({ tasks: tasks });
   } catch (error) {
     console.log(error);
@@ -20,13 +30,10 @@ router.post('/', async (req, res) => {
   if (!req.body.title)
     return res.status(400).send({ message: 'No title provided' });
 
-  if (req.body.completed === undefined)
-    return res.status(400).send({ message: 'No completion status provided' });
-
   const task = Task({
     title: req.body.title,
-    completed: req.body.completed,
     created_by: req.user._id,
+    objectives: [],
   });
 
   try {
@@ -38,26 +45,77 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.patch('/:id', authAdmin, async (req, res) => {
-  if (!req.body.title && req.body.completed === undefined)
-    return res.status(204).send({ message: 'No changes provided' });
+router.post('/my/:id', async (req, res) => {
+  if (!req.body.title)
+    return res.status(400).send({ message: 'No title provided' });
 
   const task = await Task.findOne({ _id: req.params.id });
 
   if (!task)
     return res.status(404).send({ message: 'Found no task with given id' });
 
-  task.title = req.body.title ? req.body.title : task.title;
-  if (req.body.completed !== undefined) {
-    task.completed = req.body.completed;
-    if (req.body.completed && task.objectives.length > 0) {
-      task.objectives.map((objective) => (objective.completed = true));
-    }
-  }
+  if (task.created_by != req.user._id) return res.status(401).send();
+
+  task.addObjective(req.body.title);
 
   try {
-    task.save();
-    res.status(200).send({ message: 'Task updated' });
+    await task.save();
+    res.status(201).send({ message: 'Objective added' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+});
+
+router.post('/my/:id/objective/:objectiveId', async (req, res) => {
+  const task = await Task.findOne({ _id: req.params.id });
+
+  if (!task)
+    return res.status(404).send({ message: 'Found no task with given id' });
+
+  if (task.created_by != req.user._id) return res.status(401).send();
+
+  task.switchCompleted(req.params.objectiveId);
+
+  try {
+    await task.save();
+    res.status(201).send({ message: 'Objective updated' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+});
+
+router.delete('/my/:id/objective/:objectiveId', async (req, res) => {
+  const task = await Task.findOne({ _id: req.params.id });
+
+  if (!task)
+    return res.status(404).send({ message: 'Found no task with given id' });
+
+  if (task.created_by != req.user._id) return res.status(401).send();
+
+  task.removeObjective(req.params.objectiveId);
+
+  try {
+    await task.save();
+    res.status(201).send({ message: 'Objective removed' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+});
+
+router.delete('/my/:id', async (req, res) => {
+  const task = await Task.findOne({ _id: req.params.id });
+
+  if (!task)
+    return res.status(404).send({ message: 'Found no task with given id' });
+
+  if (task.created_by != req.user._id) return res.status(401).send();
+
+  try {
+    task.deleteOne({ _id: req.params.id });
+    return res.status(200).send({ message: 'Task deleted' });
   } catch (error) {
     console.log(error);
     res.status(500).send();

@@ -32,6 +32,7 @@ router.post('/login', async (req, res) => {
   const token = user.generateJWT();
 
   // Login success
+  console.log(`User: ${user._id} - ${user.email} logged in successfully`);
   return res
     .status(200)
     .send({ token: token, message: 'Logged in successfully' });
@@ -66,6 +67,7 @@ router.post('/register', async (req, res) => {
     }).save();
 
     // User created
+    console.log(`New user created: ${req.body.email}`);
     res.status(201).send({ message: 'User created successfully' });
   } catch (error) {
     console.log(error);
