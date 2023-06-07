@@ -6,17 +6,13 @@ const { User, validateUser } = require('../models/User');
 
 const router = express.Router();
 
-const validateLoginData = (data) => {
+router.post('/login', async (req, res) => {
   const schema = joi.object({
     email: joi.string().email().required().label('Email'),
     password: joi.string().required().label('Password'),
   });
 
-  return schema.validate(data);
-};
-
-router.post('/login', async (req, res) => {
-  const { error } = validateLoginData(req.body);
+  const { error } = schema.validate(req.body);
 
   // Validation failed
   if (error) return res.status(400).send({ message: error.details[0].message });
@@ -34,8 +30,8 @@ router.post('/login', async (req, res) => {
     return res.status(401).send({ message: 'Invalid Email or Password' });
 
   const token = user.generateJWT();
-  // Login success
 
+  // Login success
   return res
     .status(200)
     .send({ token: token, message: 'Logged in successfully' });
@@ -68,13 +64,13 @@ router.post('/register', async (req, res) => {
       email: req.body.email,
       password: hash,
     }).save();
+
+    // User created
+    res.status(201).send({ message: 'User created successfully' });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ message: 'Internal Server Error' });
+    return res.status(500).send();
   }
-
-  // User created
-  res.status(200).send({ message: 'User created successfully' });
 });
 
 module.exports = router;

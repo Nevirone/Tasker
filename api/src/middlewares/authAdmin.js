@@ -8,9 +8,9 @@ const authAdmin = async (req, res, next) => {
 
   const user = await User.findOne({ _id: req.user._id });
 
-  if (!user) return res.status(500).send({ message: 'Internal Server Error' });
+  if (!user) return res.status(500).send();
 
-  if (!user.admin) return res.status(401).send({ message: 'Unauthorized' });
+  if (!user.admin) return res.status(401).send();
 
   next();
 };

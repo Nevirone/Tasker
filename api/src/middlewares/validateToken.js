@@ -8,13 +8,12 @@ const validateToken = (req, res, next) => {
   // Token send - verify it
   jwt.verify(token, process.env.JWT_SECRET, (err, decodedUser) => {
     if (err) {
-      // TODO - remove this
-      console.log('Token unauthorized');
-      return res.status(401).send({ message: 'Unauthorized!' });
+      return res.status(401).send();
     }
 
     // TODO - remove this
     console.log(`Token verified, User Id: ${decodedUser._id}`);
+
     req.user = decodedUser;
 
     next();
