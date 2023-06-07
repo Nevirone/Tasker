@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/home';
 import Signin from './pages/signin';
 import Signup from './pages/signup';
+import Logout from './pages/logout';
 
 function App() {
   const [isMenuOpen, setMenuIsOpen] = useState(false);
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<Signin />} />
         <Route path="/sign-up" element={<Signup />} />
+        <Route path="/logout" element={<Logout />} />
       </Routes>
     </Router>
   );

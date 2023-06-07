@@ -1,7 +1,9 @@
+import RegisterForm from '../components/Validation/RegisterForm';
+
 const Signup = () => {
   return (
     <>
-      <h1>Sign Up</h1>
+      <RegisterForm />
     </>
   );
 };

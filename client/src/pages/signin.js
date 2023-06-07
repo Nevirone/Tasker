@@ -1,7 +1,9 @@
+import LoginForm from '../components/Validation/LoginForm';
+
 const Signin = () => {
   return (
     <>
-      <h1>Sign In</h1>
+      <LoginForm />
     </>
   );
 };

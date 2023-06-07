@@ -18,6 +18,9 @@ const Navbar = ({ onToggle }) => {
           <NavLink className="nav-btn-link" to="/sign-in">
             Sign In
           </NavLink>
+          <NavLink className="nav-link" to="/logout">
+            Log Out
+          </NavLink>
         </div>
       </div>
     </>
