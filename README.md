@@ -8,9 +8,9 @@ Simple web application created with React.js Express.js and MongoDB
 
 ## Technologies
 This project is created using:
-* React.js version:
+* React.js version: 18.2
 * Express.js version: 4.18.2
-* MongoDB (Mongoose) version:
+* Mongoose (MongoDB) version: 7.2.1
 
 ## Setup
 To run this project install it's dependencies using npm:
