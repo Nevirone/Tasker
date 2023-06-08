@@ -52,10 +52,11 @@
   transition: 0.2s ease-in-out;
   color: #fff;
   cursor: pointer;
+  background: #333;
 }
 
 .sidebar-link:hover {
-  color: #01bf71;
+  color: #f88;
   transition: 0.2s ease-in-out;
 }
 

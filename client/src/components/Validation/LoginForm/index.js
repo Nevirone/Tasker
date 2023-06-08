@@ -49,7 +49,7 @@ const LoginForm = () => {
       .then((response) => {
         if (response.status === 200) {
           localStorage.setItem('authToken', response.data.token);
-          navigate('/');
+          navigate('/dashboard', { replace: true });
         }
       })
       .catch((error) => {

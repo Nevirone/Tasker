@@ -54,7 +54,7 @@ const RegisterForm = () => {
     axios
       .request(config)
       .then((response) => {
-        if (response.status === 201) navigate('/sign-in');
+        if (response.status === 201) navigate('/sign-in', { replace: true });
       })
       .catch((error) => {
         console.log(error);

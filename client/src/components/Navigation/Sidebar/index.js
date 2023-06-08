@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { FaTimes } from 'react-icons/fa';
-import { NavLink } from 'react-router-dom';
 import './styles.css';
+import ActiveLink from '../ActiveLink';
 
 const Sidebar = ({ onToggle, isMenuOpen }) => {
+  const token = localStorage.getItem('authToken');
   return (
     <div
       className="sidebar"
@@ -17,14 +18,20 @@ const Sidebar = ({ onToggle, isMenuOpen }) => {
       </div>
       <div className="sidebar-wrapper">
         <div className="sidebar-menu">
-          <NavLink className="sidebar-link" to="/sign-up">
-            Sign Up
-          </NavLink>
+          <ActiveLink
+            className="sidebar-link"
+            to={token ? '/dashboard' : '/sign-up'}
+          >
+            {token ? 'Dashboard' : 'Sign Up'}
+          </ActiveLink>
         </div>
         <div className="sidebar-btn">
-          <NavLink className="sidebar-btn-link" to="/sign-in">
-            Sign In
-          </NavLink>
+          <ActiveLink
+            className="sidebar-btn-link"
+            to={token ? '/logout' : '/sign-in'}
+          >
+            {token ? 'Logout' : 'Sign In'}
+          </ActiveLink>
         </div>
       </div>
     </div>

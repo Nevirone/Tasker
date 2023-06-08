@@ -6,8 +6,9 @@ form {
   background: #100010;
   margin: 10vh 35vw;
   padding: 10vh 15vw;
-  height: 70vh;
+  height: 65vh;
   border-radius: 5vw;
+  min-width: 250px;
 }
 
 input {
