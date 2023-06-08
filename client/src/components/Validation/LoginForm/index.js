@@ -76,7 +76,7 @@ const LoginForm = () => {
         type="text"
         error={passwordError}
       />
-      <button type="submit">Sign Up</button>
+      <button type="submit">Sign In</button>
     </form>
   );
 };

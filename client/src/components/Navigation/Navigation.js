@@ -16,6 +16,6 @@ const Navigation = ({ onToggle, isMenuOpen, children }) => {
 Navigation.propTypes = {
   onToggle: PropTypes.func.isRequired,
   isMenuOpen: PropTypes.bool.isRequired,
-  children: PropTypes.func.isRequired,
+  children: PropTypes.object.isRequired,
 };
 export default Navigation;
