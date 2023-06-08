@@ -7,7 +7,7 @@ const connectionParams = {
 
 const connect = async () => {
   try {
-    mongoose.connect(process.env.MONGODB, connectionParams);
+    mongoose.connect('mongodb://mongodb:27017/tasker', connectionParams);
   } catch (error) {
     console.log(`Connection error: ${error}`);
   }

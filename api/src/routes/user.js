@@ -48,7 +48,7 @@ router.patch('/:id', authAdmin, async (req, res) => {
     if (req.body.password) {
       const hash = await bcrypt.hash(
         req.body.password,
-        Number(process.env.SALT_ROUNDS),
+        10,
       );
       user.password = hash;
     }

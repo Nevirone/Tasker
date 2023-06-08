@@ -54,7 +54,7 @@ router.post('/register', async (req, res) => {
 
   const hash = await bcrypt.hash(
     req.body.password,
-    Number(process.env.SALT_ROUNDS),
+    10,
   );
 
   // Error when saving user

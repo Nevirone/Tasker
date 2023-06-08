@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const joi = require('joi');
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = require('../configs/config');
 
 const userSchema = new mongoose.Schema({
   admin: { type: Boolean, default: false },
@@ -14,7 +15,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateJWT = function () {
   const token = jwt.sign(
     { _id: this._id, email: this.email },
-    process.env.JWT_SECRET,
+    JWT_SECRET,
     {
       expiresIn: '30m',
     },

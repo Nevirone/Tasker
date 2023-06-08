@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = require('../configs/config');
 
 const validateToken = (req, res, next) => {
   const token = req.headers['x-access-token'];
@@ -6,7 +7,7 @@ const validateToken = (req, res, next) => {
   if (!token) return res.status(403).send({ message: 'No token provided!' });
 
   // Token send - verify it
-  jwt.verify(token, process.env.JWT_SECRET, (err, decodedUser) => {
+  jwt.verify(token, JWT_SECRET, (err, decodedUser) => {
     if (err) {
       console.log(`Token verification failed`);
       return res.status(401).send();

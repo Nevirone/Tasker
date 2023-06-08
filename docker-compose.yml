@@ -1,0 +1,43 @@
+version: "3"
+services:
+  react-app:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: docker-stack-client
+    container_name: mern-client
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    networks:
+      - mern-app
+
+  api-server:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: docker-stack-api
+    container_name: mern-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - mern-app
+      
+  mongodb:
+    image: mongo:3.6.19-xenial
+    ports: 
+      - "27017:27017"
+    networks:
+      - mern-app
+    volumes:
+      - mongo-data:/data/bd
+
+networks:
+  mern-app:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
