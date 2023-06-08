@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles.css';
+import { toast, Zoom } from 'react-toastify';
+
 import FormInput from '../FormInput';
 import validationRules from '../validationRules';
+import '../styles.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 import axios from 'axios';
 
 const LoginForm = () => {
@@ -49,11 +53,38 @@ const LoginForm = () => {
       .then((response) => {
         if (response.status === 200) {
           localStorage.setItem('authToken', response.data.token);
-          navigate('/dashboard', { replace: true });
+
+          toast.dismiss();
+          toast.clearWaitingQueue();
+          toast.success('Success. Redirecting to dashboard!', {
+            position: toast.POSITION.BOTTOM_CENTER,
+            hideProgressBar: true,
+            closeOnClick: true,
+            autoClose: 1000,
+            transition: Zoom,
+            onClose: () => {
+              navigate('/dashboard', { replace: true });
+            },
+          });
         }
       })
       .catch((error) => {
-        console.log(error);
+        toast.dismiss();
+        toast.clearWaitingQueue();
+
+        const status = error.response.status;
+        let message = 'Internal server error';
+
+        if (status === 400 || status === 401)
+          message = error.response.data.message;
+
+        toast.error(message, {
+          position: toast.POSITION.BOTTOM_CENTER,
+          hideProgressBar: true,
+          closeOnClick: true,
+          autoClose: 1000,
+          transition: Zoom,
+        });
       });
   };
 

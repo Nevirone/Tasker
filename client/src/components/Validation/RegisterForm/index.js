@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import '../styles.css';
+import { useNavigate } from 'react-router-dom';
+import { toast, Zoom } from 'react-toastify';
+
 import FormInput from '../FormInput';
 import validationRules from '../validationRules';
+import '../styles.css';
+
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [firstName, setFirstName] = useState('');
@@ -54,10 +57,38 @@ const RegisterForm = () => {
     axios
       .request(config)
       .then((response) => {
-        if (response.status === 201) navigate('/sign-in', { replace: true });
+        if (response.status === 201) {
+          toast.dismiss();
+          toast.clearWaitingQueue();
+
+          toast.success('New account created. Redirecting to sign in page!', {
+            position: toast.POSITION.BOTTOM_CENTER,
+            hideProgressBar: true,
+            closeOnClick: true,
+            transition: Zoom,
+            autoClose: 1000,
+            onClose: () => {
+              navigate('/sign-in', { replace: true });
+            },
+          });
+        }
       })
       .catch((error) => {
-        console.log(error);
+        toast.dismiss();
+        toast.clearWaitingQueue();
+
+        const status = error.response.status;
+        let message = 'Internal server error';
+        if (status === 400 || status === 409)
+          message = error.response.data.message;
+
+        toast.error(message, {
+          position: toast.POSITION.BOTTOM_CENTER,
+          hideProgressBar: true,
+          closeOnClick: true,
+          transition: Zoom,
+          autoClose: 1000,
+        });
       });
   };
 

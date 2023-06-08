@@ -7,6 +7,7 @@ import Dashboard from './pages/dashboard';
 import LoginForm from './components/Validation/LoginForm';
 import RegisterForm from './components/Validation/RegisterForm';
 import Navigation from './components/Navigation/Navigation';
+
 function App() {
   const [isMenuOpen, setMenuIsOpen] = useState(false);
 

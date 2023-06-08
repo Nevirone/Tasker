@@ -8,6 +8,7 @@ const Logout = () => {
     localStorage.removeItem('authToken');
     navigate('/', { replace: true });
   }, []);
+
   return <></>;
 };
 
