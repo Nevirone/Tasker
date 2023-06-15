@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const joi = require('joi');
 const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
@@ -22,18 +21,37 @@ userSchema.methods.generateJWT = function () {
   return token;
 };
 
-const User = mongoose.model('User', userSchema);
-
-// Validation
-const validateUser = (data) => {
-  const schema = joi.object({
-    firstName: joi.string().required().label('First Name'),
-    lastName: joi.string().required().label('Last Name'),
-    email: joi.string().email().required().label('Email'),
-    password: joi.string().required().label('Password'),
-  });
-
-  return schema.validate(data);
+userSchema.statics.validateFirstName = function (name) {
+  if (!name) return 'First name must be provided!';
+  if (name.length < 3) return 'First name must contain at least 3 characters!';
+  if (!name.match(/^[A-ZĘÓĄŚŁŻŹĆŃ][a-zęóąśłżźćń]*$/))
+    return 'First letter must be capital, all other must be lower case!';
 };
 
-module.exports = { User, validateUser };
+userSchema.statics.validateLastName = function (name) {
+  if (!name) return 'Last name must be provided!';
+  if (name.length < 3) return 'Last name must contain at least 3 characters!';
+  if (!name.match(/^[A-ZĘÓĄŚŁŻŹĆŃ][a-zęóąśłżźćń]*$/))
+    return 'First letter must be capital, all other must be lower case!';
+};
+
+userSchema.statics.validateEmail = function (email) {
+  if (!email) return 'Email must be provided';
+  // eslint-disable-next-line no-useless-escape
+  const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  if (!email.match(regex)) return 'Invalid email!';
+};
+
+userSchema.statics.validatePassword = function (password) {
+  if (!password) return 'Password must be provided!';
+  if (password.length < 6)
+    return 'Password must contain at least 6 characters!';
+  if (!password.match(/.*[A-ZĘÓĄŚŁŻŹĆŃ].*/))
+    return 'Password must contain at least one capital letter!';
+  if (!password.match(/.*[0123456789].*/))
+    return 'Password must contain at least one number letter!';
+};
+
+const UserModel = mongoose.model('User', userSchema);
+
+module.exports = UserModel;

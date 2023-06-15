@@ -1,77 +1,83 @@
 const express = require('express');
-const joi = require('joi');
 const bcrypt = require('bcrypt');
 
-const { User, validateUser } = require('../models/User');
+const UserModel = require('../models/User');
 
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
-  const schema = joi.object({
-    email: joi.string().email().required().label('Email'),
-    password: joi.string().required().label('Password'),
-  });
+  // Validate
+  let error = UserModel.validateEmail(req.body.email);
+  if (error) return res.status(400).send({ message: `email: ${error}` });
 
-  const { error } = schema.validate(req.body);
+  error = UserModel.validatePassword(req.body.password);
+  if (error) return res.status(400).send({ message: `password: ${error}` });
 
-  // Validation failed
-  if (error) return res.status(400).send({ message: error.details[0].message });
+  try {
+    const user = await UserModel.findOne({ email: req.body.email });
 
-  const user = await User.findOne({ email: req.body.email });
+    // Found no user with given email
+    if (!user)
+      return res.status(401).send({ message: 'Invalid Email or Password' });
 
-  // Found no user with given email
-  if (!user)
-    return res.status(401).send({ message: 'Invalid Email or Password' });
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password,
+    );
 
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
+    // Password is incorrect
+    if (!validPassword)
+      return res.status(401).send({ message: 'Invalid Email or Password' });
 
-  // Password is incorrect
-  if (!validPassword)
-    return res.status(401).send({ message: 'Invalid Email or Password' });
+    const token = user.generateJWT();
 
-  const token = user.generateJWT();
-
-  // Login success
-  console.log(`User: ${user._id} - ${user.email} logged in successfully`);
-  return res
-    .status(200)
-    .send({ token: token, message: 'Logged in successfully' });
+    // Login success
+    res.status(200).send({ message: 'Logged in successfully', token: token });
+  } catch (error) {
+    console.log(`User login error: ${error}`);
+    res.status(500).send();
+  }
 });
 
 router.post('/register', async (req, res) => {
-  const { error } = validateUser(req.body);
+  // Validation
+  let error = UserModel.validateFirstName(req.body.firstName);
+  if (error) return res.status(400).send({ message: `firstName: ${error}` });
 
-  //  Validation failed
-  if (error) return res.status(400).send({ message: error.details[0].message });
+  error = UserModel.validateLastName(req.body.lastName);
+  if (error) return res.status(400).send({ message: `lastName: ${error}` });
 
-  const user = await User.findOne({ email: req.body.email });
+  error = UserModel.validateEmail(req.body.email);
+  if (error) return res.status(400).send({ message: `email: ${error}` });
+
+  error = UserModel.validatePassword(req.body.password);
+  if (error) return res.status(400).send({ message: `password: ${error}` });
 
   // Email unique
+  const user = await UserModel.findOne({ email: req.body.email });
+
   if (user)
     return res
       .status(409)
       .send({ message: 'User with given email already exists' });
 
-  const hash = await bcrypt.hash(
-    req.body.password,
-    Number(process.env.SALT_ROUNDS),
-  );
+  // Hash password
+  const hash = await bcrypt.hash(req.body.password, 10);
 
-  // Error when saving user
+  const newUser = UserModel({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: hash,
+  });
+
+  // Try to save new user
   try {
-    await new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: hash,
-    }).save();
-
-    // User created
-    console.log(`New user created: ${req.body.email}`);
+    await newUser.save();
     res.status(201).send({ message: 'User created successfully' });
   } catch (error) {
-    console.log(error);
-    return res.status(500).send();
+    res.status(500).send();
+    console.log(`User creation error: ${error}`);
   }
 });
 

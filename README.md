@@ -1,4 +1,4 @@
-# Tasker - task and objectives management app
+# Tasker - team task management app
 Simple web application created with React.js Express.js and MongoDB
 
 ## Table of Contents
