@@ -3,7 +3,12 @@ const express = require('express');
 const cors = require('cors');
 
 const connect = require('./src/services/database');
-const { authRouter, userRouter, taskRouter } = require('./src/routes/index');
+const {
+  authRouter,
+  userRouter,
+  taskRouter,
+  teamRouter,
+} = require('./src/routes/index');
 const { validateToken } = require('./src/middlewares/index');
 
 const app = express();
@@ -16,6 +21,7 @@ app.use(cors());
 app.use('/auth', authRouter);
 app.use('/user', validateToken, userRouter);
 app.use('/task', validateToken, taskRouter);
+app.use('/team', validateToken, teamRouter);
 
 app.get('/', (req, res) => {
   res.status(200).send({ message: 'Hello world!' });

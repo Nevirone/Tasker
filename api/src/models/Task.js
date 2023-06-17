@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
 
-const RatingModel = require('./Rating');
 const CommentModel = require('./Comment');
 
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
-  author: { type: String, required: true }, // user id
+  status: {
+    type: String,
+    enum: ['Normal', 'Urgent', 'Critical'],
+    required: true,
+  },
+  author: { type: mongoose.Schema.Types.ObjectId, required: true },
+  team: { type: mongoose.Schema.Types.ObjectId, required: true },
   comments: { type: [CommentModel.schema], default: [] },
-  ratings: { type: [RatingModel.schema], default: [] },
   created_at: { type: Date, default: Date.now },
 });
 
@@ -23,20 +27,10 @@ taskSchema.statics.validateContent = function (content) {
   if (content.length === 0) return 'Content cannot be empty';
 };
 
-// Comment methods
-taskSchema.methods.addComment = function (req, res) {
-  if (req.body.content)
-    return res.status(400).send({ message: 'Content not provided' });
-
-  if (req.body.content.length === 0)
-    return res.status(400).send({ message: 'Content empty' });
-
-  const comment = CommentModel({
-    content: req.body.content,
-    author: req.user.username,
-  });
-
-  this.comments.push(comment);
+taskSchema.statics.validateStatus = function (status) {
+  const states = ['Normal', 'Urgent', 'Critical'];
+  if (!status) return `Status must be provided [${states.join(', ')}]`;
+  if (!states.includes(status)) return `Wrong status [${states.join(', ')}]`;
 };
 
 const TaskModel = mongoose.model('Task', taskSchema);

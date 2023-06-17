@@ -18,7 +18,7 @@ router.post('/login', async (req, res) => {
 
     // Found no user with given email
     if (!user)
-      return res.status(401).send({ message: 'Invalid Email or Password' });
+      return res.status(401).send({ message: 'Invalid Email or Password!' });
 
     const validPassword = await bcrypt.compare(
       req.body.password,
@@ -27,12 +27,12 @@ router.post('/login', async (req, res) => {
 
     // Password is incorrect
     if (!validPassword)
-      return res.status(401).send({ message: 'Invalid Email or Password' });
+      return res.status(401).send({ message: 'Invalid Email or Password!' });
 
     const token = user.generateJWT();
 
     // Login success
-    res.status(200).send({ message: 'Logged in successfully', token: token });
+    res.status(200).send({ message: 'Logged in successfully!', token: token });
   } catch (error) {
     console.log(`User login error: ${error}`);
     res.status(500).send();
@@ -59,9 +59,8 @@ router.post('/register', async (req, res) => {
   if (user)
     return res
       .status(409)
-      .send({ message: 'User with given email already exists' });
+      .send({ message: 'User with given email already exists!' });
 
-  // Hash password
   const hash = await bcrypt.hash(req.body.password, 10);
 
   const newUser = UserModel({
@@ -71,10 +70,10 @@ router.post('/register', async (req, res) => {
     password: hash,
   });
 
-  // Try to save new user
+  // Create new user
   try {
     await newUser.save();
-    res.status(201).send({ message: 'User created successfully' });
+    res.status(201).send({ message: 'User created!' });
   } catch (error) {
     res.status(500).send();
     console.log(`User creation error: ${error}`);
