@@ -18,7 +18,7 @@ router.post('/login', async (req, res) => {
 
     // Found no user with given email
     if (!user)
-      return res.status(401).send({ message: 'Invalid Email or Password!' });
+      return res.status(403).send({ message: 'Invalid Email or Password!' });
 
     const validPassword = await bcrypt.compare(
       req.body.password,
@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
 
     // Password is incorrect
     if (!validPassword)
-      return res.status(401).send({ message: 'Invalid Email or Password!' });
+      return res.status(403).send({ message: 'Invalid Email or Password!' });
 
     const token = user.generateJWT();
 

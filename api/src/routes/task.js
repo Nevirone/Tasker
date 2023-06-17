@@ -85,7 +85,7 @@ router.patch('/:id', async (req, res) => {
       return res.status(404).send({ message: 'Found no task with given id!' });
 
     if (task.author != req.user._id)
-      return res.status(401).send({ message: 'You are not the author' });
+      return res.status(403).send({ message: 'You are not the author' });
 
     // Change user data to those provided
     task.title = req.body.title ? req.body.title : task.title;
@@ -110,7 +110,7 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).send({ message: 'Found no task with given id' });
 
     if (task.author != req.user._id)
-      return res.status(401).send({ message: 'You are not the author' });
+      return res.status(403).send({ message: 'You are not the author' });
 
     // Delete task
     task.deleteOne({ _id: req.params.id });

@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const CommentModel = require('./Comment');
-
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
@@ -12,7 +10,6 @@ const taskSchema = new mongoose.Schema({
   },
   author: { type: mongoose.Schema.Types.ObjectId, required: true },
   team: { type: mongoose.Schema.Types.ObjectId, required: true },
-  comments: { type: [CommentModel.schema], default: [] },
   created_at: { type: Date, default: Date.now },
 });
 
