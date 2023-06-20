@@ -1,10 +1,12 @@
+import PageTitle from "../components/PageTitle";
 
 const Home = () => {
   return (
     <div className="page-wrapper">
-      <h1>Home</h1>
+      <PageTitle title="Home" />
+      <div className="page-content"></div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

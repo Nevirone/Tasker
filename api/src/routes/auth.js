@@ -10,8 +10,8 @@ router.post('/login', async (req, res) => {
   let error = UserModel.validateEmail(req.body.email);
   if (error) return res.status(400).send({ message: `email: ${error}` });
 
-  error = UserModel.validatePassword(req.body.password);
-  if (error) return res.status(400).send({ message: `password: ${error}` });
+  if (!req.body.password)
+    return res.status(400).send({ message: 'Invalid Email or Password!' });
 
   try {
     const user = await UserModel.findOne({ email: req.body.email });

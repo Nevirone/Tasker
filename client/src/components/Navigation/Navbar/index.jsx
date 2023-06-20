@@ -1,13 +1,13 @@
-import { FaBars } from 'react-icons/fa';
-import { toast, Zoom, ToastContainer } from 'react-toastify';
+import { FaBars } from "react-icons/fa";
+import { toast, Zoom, ToastContainer } from "react-toastify";
 
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-import ActiveLink from '../ActiveLink';
-import './styles.css';
+import ActiveLink from "../ActiveLink";
+import "./styles.css";
 
 const Navbar = ({ handleMenuToggle }) => {
-  const token = localStorage.getItem('jwt_token');
+  const token = localStorage.getItem("jwt_token");
 
   return (
     <>
@@ -18,6 +18,16 @@ const Navbar = ({ handleMenuToggle }) => {
         </ActiveLink>
         <FaBars className="bars" onClick={handleMenuToggle} />
         <div className="nav-menu">
+          {token && (
+            <ActiveLink className="nav-link" to="/join_team">
+              Join team
+            </ActiveLink>
+          )}
+          {token && (
+            <ActiveLink className="nav-link" to="/add_team">
+              Create team
+            </ActiveLink>
+          )}
           {token && (
             <ActiveLink className="nav-link" to="/dashboard">
               Dashboard
@@ -40,16 +50,16 @@ const Navbar = ({ handleMenuToggle }) => {
                 toast.dismiss();
                 toast.clearWaitingQueue();
 
-                toast.success('Logged out. Redirecting to home page', {
+                toast.success("Logged out. Redirecting to home page", {
                   position: toast.POSITION.BOTTOM_CENTER,
                   hideProgressBar: true,
                   closeOnClick: true,
                   autoClose: 1000,
                   transition: Zoom,
                   onClose: () => {
-                    localStorage.removeItem('jwt_token');
-                    window.location.href = '/';
-                  },
+                    localStorage.removeItem("jwt_token");
+                    window.location.href = "/";
+                  }
                 });
               }}
             >
@@ -63,7 +73,7 @@ const Navbar = ({ handleMenuToggle }) => {
 };
 
 Navbar.propTypes = {
-  handleMenuToggle: PropTypes.func,
+  handleMenuToggle: PropTypes.func
 };
 
 export default Navbar;

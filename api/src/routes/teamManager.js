@@ -14,9 +14,18 @@ router.post('/join', async (req, res) => {
 
   if (!team) return res.status(404).send({ message: 'Token invalid' });
 
-  const user = UserModel.findOne({ _id: req.user._id });
+  const user = await UserModel.findOne({ _id: req.user._id });
 
-  team.addUser(user);
+  console.log(user);
+
+  let found = false;
+  team.users.forEach((user) => {
+    if (user._id == req.user._id) found = true;
+  });
+  if (found)
+    return res.status(409).send({ message: 'You are already in this team' });
+
+  team.users = [...team.users, user];
 
   try {
     await team.save();
@@ -29,7 +38,7 @@ router.post('/join', async (req, res) => {
 
 //Remove user from team
 router.delete('/:teamId/:userId', async (req, res) => {
-  const team = TeamModel.findOne({ _id: req.params.teamId });
+  let team = await TeamModel.findOne({ _id: req.params.teamId });
   if (!team)
     return res.status(404).send({ message: 'Found no team with given id' });
 
@@ -37,10 +46,13 @@ router.delete('/:teamId/:userId', async (req, res) => {
   if (!user)
     return res.status(404).send({ message: 'Found user with given id' });
 
-  if (team.owner != req.user._id)
+  if (team.owner._id != req.user._id)
     return res.status(403).send({ message: 'You are not the owner' });
 
-  team.users = team.user.filter((user) => user._id === req.params.userId);
+  team.users = team.users.filter((user) => user._id != req.params.userId);
+  team.tasks = team.tasks.filter(
+    (task) => task.author._id != req.params.userId,
+  );
 
   try {
     await team.save();

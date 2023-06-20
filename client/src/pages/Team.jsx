@@ -1,15 +1,14 @@
 import PageTitle from "../components/PageTitle";
-import TeamList from "../components/Team/TeamList";
-
-const Dashboard = () => {
+import TeamDetails from "../components/Team/TeamDetails";
+const Team = () => {
   return (
     <div className="page-wrapper">
-      <PageTitle title="Dashboard" />
+      <PageTitle title="Team details" />
       <div className="page-content">
-        <TeamList />
+        <TeamDetails />
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default Team;

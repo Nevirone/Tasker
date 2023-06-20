@@ -1,12 +1,15 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
-const TeamRow = ({team}) => {
+const TeamRow = ({ team }) => {
   return (
-    <li>{team.name}</li>
-  )
-}
+    <Link replace to={`/team/${team._id}`}>
+      <li>{team.name}</li>
+    </Link>
+  );
+};
 
 TeamRow.propTypes = {
-  team: PropTypes.object
-}
-export default TeamRow
+  team: PropTypes.object.isRequired
+};
+export default TeamRow;

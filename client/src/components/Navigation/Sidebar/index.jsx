@@ -1,11 +1,11 @@
-import PropTypes from 'prop-types';
-import { FaTimes } from 'react-icons/fa';
-import './styles.css';
-import ActiveLink from '../ActiveLink';
-import { toast, Zoom, ToastContainer } from 'react-toastify';
+import PropTypes from "prop-types";
+import { FaTimes } from "react-icons/fa";
+import "./styles.css";
+import ActiveLink from "../ActiveLink";
+import { toast, Zoom, ToastContainer } from "react-toastify";
 
 const Sidebar = ({ handleMenuToggle, isMenuOpen }) => {
-  const token = localStorage.getItem('jwt_token');
+  const token = localStorage.getItem("jwt_token");
 
   return (
     <>
@@ -13,8 +13,8 @@ const Sidebar = ({ handleMenuToggle, isMenuOpen }) => {
       <div
         className="sidebar"
         style={{
-          opacity: isMenuOpen ? '100%' : '0%',
-          top: isMenuOpen ? '0' : '-100%',
+          opacity: isMenuOpen ? "100%" : "0%",
+          top: isMenuOpen ? "0" : "-100%"
         }}
       >
         <div className="icon">
@@ -22,11 +22,22 @@ const Sidebar = ({ handleMenuToggle, isMenuOpen }) => {
         </div>
         <div className="sidebar-wrapper">
           <div className="sidebar-menu">
+            {token && (
+              <ActiveLink className="sidebar-link" to="/join_team">
+                Join team
+              </ActiveLink>
+            )}
+            {token && (
+              <ActiveLink className="sidebar-link" to="/add_team">
+                Create team
+              </ActiveLink>
+            )}
+
             <ActiveLink
               className="sidebar-link"
-              to={token ? '/dashboard' : '/register'}
+              to={token ? "/dashboard" : "/register"}
             >
-              {token ? 'Dashboard' : 'Register'}
+              {token ? "Dashboard" : "Register"}
             </ActiveLink>
           </div>
           <div className="sidebar-btn">
@@ -42,16 +53,16 @@ const Sidebar = ({ handleMenuToggle, isMenuOpen }) => {
                   toast.dismiss();
                   toast.clearWaitingQueue();
 
-                  toast.success('Logged out. Redirecting to home page', {
+                  toast.success("Logged out. Redirecting to home page", {
                     position: toast.POSITION.BOTTOM_CENTER,
                     hideProgressBar: true,
                     closeOnClick: true,
                     autoClose: 1000,
                     transition: Zoom,
                     onClose: () => {
-                      localStorage.removeItem('jwt_token');
-                      window.location.href = '/';
-                    },
+                      localStorage.removeItem("jwt_token");
+                      window.location.href = "/";
+                    }
                   });
                 }}
               >
@@ -67,7 +78,7 @@ const Sidebar = ({ handleMenuToggle, isMenuOpen }) => {
 
 Sidebar.propTypes = {
   handleMenuToggle: PropTypes.func,
-  isMenuOpen: PropTypes.bool,
+  isMenuOpen: PropTypes.bool
 };
 
 export default Sidebar;

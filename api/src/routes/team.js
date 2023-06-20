@@ -43,8 +43,7 @@ router.get('/', async (req, res) => {
     teams = teams.filter((team) => {
       let found = false;
       team.users.forEach((user) => {
-        // ToDo - remove after trying ===
-        if (user._id === req.user._id) found = true;
+        if (user._id == req.user._id) found = true;
       });
       return found;
     });
@@ -63,8 +62,7 @@ router.get('/:teamId', async (req, res) => {
     // Filter only those where user is found
     let found = false;
     team.users.forEach((user) => {
-      // ToDo - remove after trying ===
-      if (user._id === req.user._id) found = true;
+      if (user._id == req.user._id) found = true;
     });
 
     if (!found)
@@ -103,8 +101,7 @@ router.patch('/:id', async (req, res) => {
     if (!team)
       return res.status(404).send({ message: 'Found no team with given id!' });
 
-    // ToDo - remove after trying ===
-    if (team.owner !== req.user._id)
+    if (team.owner != req.user._id)
       return res.status(403).send({ message: 'You are not the owner' });
 
     // Change user data to those provided
@@ -128,7 +125,7 @@ router.delete('/:id', async (req, res) => {
     if (!team)
       return res.status(404).send({ message: 'Found no team with given id!' });
 
-    if (team.owner != req.user._id)
+    if (team.owner._id != req.user._id)
       return res.status(403).send({ message: 'You are not the owner' });
 
     // TODO - Remove tasks associated with team

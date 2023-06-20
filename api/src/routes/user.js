@@ -19,10 +19,8 @@ router.get('/', authAdmin, async (req, res) => {
 router.get('/me', async (req, res) => {
   try {
     const user = await UserModel.findOne({ _id: req.user._id });
-    if (!user) return res.status(500).send();
-    console.log(`User get me error: No user found`);
 
-    res.status(200).send({ user: user });
+    res.status(200).send({ data: user });
   } catch (error) {
     console.log(`User get me error: ${error}`);
     res.status(500).send();

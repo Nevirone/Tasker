@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast, Zoom } from 'react-toastify'
+import { toast, Zoom } from 'react-toastify';
 import axios from 'axios';
+import FormInput from '../FormInput';
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -11,53 +12,35 @@ const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleFirstNameChange = (event) => {
-    setFirstName(event.target.value);
-  };
-
-  const handleLastNameChange = (event) => {
-    setLastName(event.target.value);
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
   const validateData = () => {
-  if (!firstName) return 'First name must be provided!';
-  if (firstName.length < 3) return 'First name must contain at least 3 characters!';
-  if (!firstName.match(/^[A-ZĘÓĄŚŁŻŹĆŃ][a-zęóąśłżźćń]*$/))
-    return 'First letter must be capital, all other must be lower case!';
+    if (firstName.length < 3)
+      return 'First name must contain at least 3 characters!';
+    if (!firstName.match(/^[A-ZĘÓĄŚŁŻŹĆŃ][a-zęóąśłżźćń]*$/))
+      return 'First letter must be capital, all other must be lower case!';
 
-  if (!lastName) return 'Last name must be provided!';
-  if (lastName.length < 3) return 'Last name must contain at least 3 characters!';
-  if (!lastName.match(/^[A-ZĘÓĄŚŁŻŹĆŃ][a-zęóąśłżźćń]*$/))
-    return 'First letter must be capital, all other must be lower case!';
+    if (lastName.length < 3)
+      return 'Last name must contain at least 3 characters!';
+    if (!lastName.match(/^[A-ZĘÓĄŚŁŻŹĆŃ][a-zęóąśłżźćń]*$/))
+      return 'First letter must be capital, all other must be lower case!';
 
-  if (!email) return 'Email must be provided';
-  // eslint-disable-next-line no-useless-escape
-  const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  if (!email.match(regex)) return 'Invalid email!';
+    // eslint-disable-next-line no-useless-escape
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (!email.match(regex)) return 'Invalid email!';
 
-  if (!password) return 'Password must be provided!';
-  if (password.length < 6)
-    return 'Password must contain at least 6 characters!';
-  if (!password.match(/.*[A-ZĘÓĄŚŁŻŹĆŃ].*/))
-    return 'Password must contain at least one capital letter!';
-  if (!password.match(/.*[0123456789].*/))
-    return 'Password must contain at least one number letter!';
-  }
+    if (password.length < 6)
+      return 'Password must contain at least 6 characters!';
+    if (!password.match(/.*[A-ZĘÓĄŚŁŻŹĆŃ].*/))
+      return 'Password must contain at least one capital letter!';
+    if (!password.match(/.*[0123456789].*/))
+      return 'Password must contain at least one number letter!';
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const error = validateData()
+    const error = validateData();
 
-    if(error) {
+    if (error) {
       toast.dismiss();
       toast.clearWaitingQueue();
 
@@ -67,7 +50,7 @@ const RegisterForm = () => {
         closeOnClick: true,
         autoClose: 1000,
         transition: Zoom,
-      })
+      });
     }
 
     try {
@@ -90,7 +73,7 @@ const RegisterForm = () => {
         transition: Zoom,
         onClose: () => {
           localStorage.removeItem('jwt_token');
-          navigate('/login')
+          navigate('/login');
         },
       });
     } catch (error) {
@@ -100,45 +83,43 @@ const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="firstName">First Name:</label>
-        <input
+    <div className="form-wrapper">
+      <form onSubmit={handleSubmit}>
+        <FormInput
+          name="First Name "
           type="text"
+          placeholder="First Name"
           id="firstName"
           value={firstName}
-          onChange={handleFirstNameChange}
+          setValue={setFirstName}
         />
-      </div>
-      <div>
-        <label htmlFor="lastName">Last Name:</label>
-        <input
+        <FormInput
+          name="Last Name "
           type="text"
+          placeholder="Last Name"
           id="lastName"
           value={lastName}
-          onChange={handleLastNameChange}
+          setValue={setLastName}
         />
-      </div>
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input
+        <FormInput
+          name="Email "
           type="email"
+          placeholder="Email"
           id="email"
           value={email}
-          onChange={handleEmailChange}
+          setValue={setEmail}
         />
-      </div>
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input
+        <FormInput
+          name="Password "
           type="password"
+          placeholder="Password"
           id="password"
           value={password}
-          onChange={handlePasswordChange}
+          setValue={setPassword}
         />
-      </div>
-      <button type="submit">Register</button>
-    </form>
+        <button type="submit">Register</button>
+      </form>
+    </div>
   );
 };
 
