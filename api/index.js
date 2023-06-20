@@ -8,6 +8,7 @@ const {
   userRouter,
   taskRouter,
   teamRouter,
+  teamManageRouter,
 } = require('./src/routes/index');
 const { validateToken } = require('./src/middlewares/index');
 
@@ -22,9 +23,10 @@ app.use('/auth', authRouter);
 app.use('/user', validateToken, userRouter);
 app.use('/task', validateToken, taskRouter);
 app.use('/team', validateToken, teamRouter);
+app.use('/team/manage', validateToken, teamManageRouter);
 
-app.get('/', (req, res) => {
-  res.status(200).send({ message: 'Hello world!' });
+app.get('/*', (req, res) => {
+  res.status(404).send({ message: '404 Not Found' });
 });
 
 const PORT = process.env.PORT || 8080;

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const UserModel = require('./User');
+
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
@@ -8,7 +10,7 @@ const taskSchema = new mongoose.Schema({
     enum: ['Normal', 'Urgent', 'Critical'],
     required: true,
   },
-  author: { type: mongoose.Schema.Types.ObjectId, required: true },
+  author: { type: UserModel.schema, required: true },
   team: { type: mongoose.Schema.Types.ObjectId, required: true },
   created_at: { type: Date, default: Date.now },
 });

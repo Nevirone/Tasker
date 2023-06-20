@@ -1,45 +1,22 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 const UserModel = require('./User');
+const TaskModel = require('./Task');
 
 const teamSchema = mongoose.Schema({
   token: { type: String, required: true },
   name: { type: String, required: true },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: UserModel,
-    required: true,
-  },
-  users: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: UserModel,
-      },
-    ],
-    default: [],
-  },
+  owner: { type: UserModel.schema, required: true },
+  users: { type: [{ type: UserModel.schema, required: true }], required: true },
+  tasks: { type: [{ type: TaskModel.schema, required: true }], default: [] },
   created_at: { type: Date, default: Date.now },
 });
 
-teamSchema.methods.addUser = function (userId) {
-  if (!userId) return;
-  if (this.users.includes(userId)) return;
-  this.users.push(userId);
-};
-
-teamSchema.methods.removeUser = function (userId) {
-  let users = this.users;
-  users = users.filter((user) => user._id == userId);
-  this.users = users;
-};
-
-teamSchema.statics.validateToken = function (token) {
-  if (!token) return 'No token provided';
-  if (token.length < 6) return 'Token must contain at least 6 letters';
-  if (token.length > 32) return 'Token can only contain 32 letters';
-  if (!token.match(/^[a-zA-Z\s]*$/))
-    return 'Token can only consist of letters and spaces';
+teamSchema.methods.generateToken = function () {
+  const token = crypto.randomBytes(4).toString('hex').substring(0, 6);
+  this.token = token;
+  return token;
 };
 
 teamSchema.statics.validateName = function (name) {

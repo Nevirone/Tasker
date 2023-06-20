@@ -1,6 +1,7 @@
 const express = require('express');
 const TaskModel = require('../models/Task');
 const TeamModel = require('../models/Team');
+const UserModel = require('../models/User');
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.post('/:teamId', async (req, res) => {
   if (error) return res.status(400).send({ message: `status: ${error}` });
 
   // check if team exists
-  const team = TeamModel.findOne({ _id: req.params.teamId });
+  const team = await TeamModel.findOne({ _id: req.params.teamId });
   if (!team) return res.status(404).send({ message: 'Team not found' });
 
   // Check for duplacate
@@ -28,16 +29,20 @@ router.post('/:teamId', async (req, res) => {
 
   if (duplicate) return res.status(409).send({ messsage: 'Duplicate found' });
 
+  const author = await UserModel.findOne({ _id: req.user._id });
+
   const task = TaskModel({
     title: req.body.title,
     content: req.body.content,
     status: req.body.status,
-    author: req.user._id,
+    author: author,
     team: req.params.teamId,
   });
 
   try {
     await task.save();
+    team.tasks.push(task);
+    await team.save();
     res.status(201).send({ message: `New task created in ${team.name}!` });
   } catch (error) {
     res.status(500).send();
