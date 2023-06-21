@@ -42,11 +42,30 @@ router.post('/:teamId', async (req, res) => {
 
 router.get('/:teamId', async (req, res) => {
   try {
-    const team = TeamModel.findOne({ _id: req.params.teamId });
+    const team = await TeamModel.findOne({ _id: req.params.teamId });
 
     if (!team)
       return res.status(404).send({ message: 'Team with given id not found' });
     res.status(200).send({ data: team.tasks });
+  } catch (error) {
+    res.status(500).send();
+    console.log(`Task get error: ${error}`);
+  }
+});
+
+router.get('/:teamId/:taskId', async (req, res) => {
+  try {
+    const team = await TeamModel.findOne({ _id: req.params.teamId });
+
+    if (!team)
+      return res.status(404).send({ message: 'Team with given id not found' });
+
+    const index = team.tasks.findIndex((task) => task._id == req.params.taskId);
+
+    if (index === -1)
+      return res.status(404).send({ message: 'Task not found' });
+
+    res.status(200).send({ data: team.tasks[index] });
   } catch (error) {
     res.status(500).send();
     console.log(`Task get error: ${error}`);
@@ -84,7 +103,7 @@ router.patch('/:teamId/:id', async (req, res) => {
     if (index === -1)
       return res.status(404).send({ message: 'Found no task with given id' });
 
-    if (team.tasks[index].author != req.user._id)
+    if (team.tasks[index].author._id != req.user._id)
       return res.status(403).send({ message: 'You are not the author' });
 
     // Change user data to those provided
@@ -119,7 +138,10 @@ router.delete('/:teamId/:id', async (req, res) => {
     if (index === -1)
       return res.status(404).send({ message: 'Found no task with given id' });
 
-    if (team.tasks[index].author._id != req.user._id)
+    if (
+      team.tasks[index].author._id != req.user._id &&
+      team.owner._id != req.user._id
+    )
       return res.status(403).send({ message: 'You are not the author' });
 
     // Delete task

@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const TeamRow = ({ team }) => {
   return (
@@ -10,6 +10,6 @@ const TeamRow = ({ team }) => {
 };
 
 TeamRow.propTypes = {
-  team: PropTypes.object.isRequired
+  team: PropTypes.object,
 };
 export default TeamRow;

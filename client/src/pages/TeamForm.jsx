@@ -2,6 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast, Zoom } from 'react-toastify';
+import PageTitle from '../components/PageTitle';
+import FormInput from '../components/FormInput';
 
 const TeamForm = () => {
   const navigate = useNavigate();
@@ -58,20 +60,21 @@ const TeamForm = () => {
   };
 
   return (
-    <div className="form-wrapper">
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            Name:
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
+    <div className="page-wrapper">
+      <PageTitle title="Create team" />
+      <div className="page-content">
+        <form onSubmit={handleSubmit}>
+          <FormInput
+            name=""
+            type="text"
+            placeholder="Name"
+            id="name"
+            value={name}
+            setValue={setName}
+          />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, Zoom } from 'react-toastify';
 import axios from 'axios';
-import FormInput from '../FormInput';
+import FormInput from '../../components/FormInput';
 
 const RegisterForm = () => {
   const navigate = useNavigate();

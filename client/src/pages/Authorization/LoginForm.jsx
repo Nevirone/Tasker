@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast, Zoom } from 'react-toastify';
 import axios from 'axios';
-import FormInput from '../FormInput';
+import FormInput from '../../components/FormInput';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');

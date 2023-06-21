@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import TeamRow from './TeamRow';
+import { useNavigate } from 'react-router-dom';
 
 const TeamList = () => {
+  const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
@@ -32,14 +33,32 @@ const TeamList = () => {
   }, []);
 
   return (
-    <div className="team-list-wrapper">
-      <h1>Team List</h1>
-      <ul>
-        {teams.length === 0 && <p>No teams, maybe join one</p>}
-        {teams.length > 0 &&
-          teams.map((team) => <TeamRow key={team.name} team={team} />)}
-      </ul>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Team name</th>
+          <th colSpan={2}>Team owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        {teams.map((team) => (
+          <tr key={team._id}>
+            <td>{team.name}</td>
+            <td>
+              {team.owner.firstName} {team.owner.lastName}
+            </td>
+            <td>
+              <button
+                type="button"
+                onClick={() => navigate(`/team/${team._id}`)}
+              >
+                Details
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 

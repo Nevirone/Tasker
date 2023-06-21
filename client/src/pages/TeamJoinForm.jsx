@@ -2,6 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast, Zoom } from 'react-toastify';
+import PageTitle from '../components/PageTitle';
+import FormInput from '../components/FormInput';
 
 const TeamJoinForm = () => {
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ const TeamJoinForm = () => {
         window.location.href = '/';
       }
 
-      if (error.response.status === 409) {
+      if (error.response.status === 404 || error.response.status === 409) {
         toast.dismiss();
         toast.clearWaitingQueue();
 
@@ -73,18 +75,21 @@ const TeamJoinForm = () => {
   };
 
   return (
-    <div className="form-wrapper">
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={teamToken}
-          placeholder="Token"
-          onChange={(e) => {
-            if (e.target.value.length <= 6) setTeamToken(e.target.value);
-          }}
-        />
-        <button type="submit">Join</button>
-      </form>
+    <div className="page-wrapper">
+      <PageTitle title="Join a team" />
+      <div className="page-content">
+        <form onSubmit={handleSubmit}>
+          <FormInput
+            name=""
+            type="text"
+            placeholder="Token"
+            id="token"
+            value={teamToken}
+            setValue={setTeamToken}
+          />
+          <button type="submit">Join</button>
+        </form>
+      </div>
     </div>
   );
 };

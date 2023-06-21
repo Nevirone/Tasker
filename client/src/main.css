@@ -11,29 +11,29 @@
   flex-direction: column;
 }
 
+.page-content {
+  text-align: center;
+}
 .page-title {
   font-size: xx-large;
   font-weight: bold;
   margin: 1rem;
 }
 
-.form-wrapper {
+form {
+  display: flex;
+  flex-direction: column;
   display: flex;
   align-items: center;
   flex-direction: column;
   width: 60vw;
 }
 
-.form-wrapper form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-wrapper select {
+form select {
   min-width: 100px;
   height: 25px;
 }
-.form-wrapper input {
+form input {
   min-width: 200px;
   height: 25px;
   margin-top: 0.5rem;
